@@ -42,7 +42,7 @@ class _PlayScreenState extends State<PlayScreen> {
             child: CustomScrollView(
               physics: const BouncingScrollPhysics(),
               slivers: [
-                // Header
+                // ── Header ─────────────────────────────────────
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(20, 28, 20, 0),
@@ -58,7 +58,7 @@ class _PlayScreenState extends State<PlayScreen> {
                   ),
                 ),
 
-                // Brick summary
+                // ── Brick summary ───────────────────────────────
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
@@ -66,7 +66,7 @@ class _PlayScreenState extends State<PlayScreen> {
                   ),
                 ),
 
-                // Section label
+                // ── Section label ───────────────────────────────
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(20, 28, 20, 12),
@@ -74,7 +74,7 @@ class _PlayScreenState extends State<PlayScreen> {
                   ),
                 ),
 
-                // Zone list — max-width constrained for tablet
+                // ── Zone list ───────────────────────────────────
                 SliverToBoxAdapter(
                   child: Align(
                     alignment: Alignment.topCenter,
@@ -90,7 +90,8 @@ class _PlayScreenState extends State<PlayScreen> {
                               child: _ZonePlayCard(
                                 zone: zone,
                                 unlocked: unlocked,
-                                bricksEarned: appState.bricksForZone(zone.id),
+                                bricksEarned:
+                                    appState.bricksForZone(zone.id),
                                 onTap: unlocked
                                     ? () => _startZone(context, zone)
                                     : null,
@@ -128,32 +129,50 @@ class _BrickSummary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       decoration: BoxDecoration(
-        color: WBColors.brickOrange,
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: [
-          BoxShadow(
-            color: WBColors.brickOrange.withValues(alpha: 0.3),
-            blurRadius: 16,
-            offset: const Offset(0, 6),
-          )
-        ],
+        gradient: WBGradients.brickWarm,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: WBShadows.button(WBColors.brickOrange),
       ),
       child: Row(
         children: [
-          WBIcons.brick(color: Colors.white, size: 22),
-          const SizedBox(width: 12),
+          // Icon container
+          Container(
+            width: 42,
+            height: 42,
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.18),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Center(
+              child: WBIcons.brick(color: Colors.white, size: 22),
+            ),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('$bricks bricks collected',
+                    style: WBText.body(15,
+                        color: Colors.white, weight: FontWeight.w800)),
+                const SizedBox(height: 1),
+                Text('Answer questions to earn more!',
+                    style: WBText.body(11,
+                        color: Colors.white.withValues(alpha: 0.75),
+                        weight: FontWeight.w600)),
+              ],
+            ),
+          ),
+          // Mini progress visual
           Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text('$bricks bricks collected',
-                  style: WBText.body(15,
-                      color: Colors.white, weight: FontWeight.w800)),
-              Text('Answer questions to earn more!',
-                  style: WBText.body(11,
-                      color: Colors.white.withValues(alpha: 0.75),
-                      weight: FontWeight.w600)),
+              Text(
+                '🏆',
+                style: const TextStyle(fontSize: 22),
+              ),
             ],
           ),
         ],
@@ -179,98 +198,169 @@ class _ZonePlayCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final accent = zone.accentColor;
+
     return WBPressable(
       onTap: onTap,
       borderRadius: BorderRadius.circular(20),
       child: Container(
-        padding: const EdgeInsets.all(16),
+        height: 90,
         decoration: BoxDecoration(
-          color: unlocked
-              ? zone.accentColor.withValues(alpha: 0.08)
-              : WBColors.lockedBg,
+          color: WBColors.cardWhite,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: unlocked
-                ? zone.accentColor.withValues(alpha: 0.3)
-                : WBColors.locked.withValues(alpha: 0.15),
-            width: unlocked ? 1.5 : 1,
+                ? accent.withValues(alpha: 0.20)
+                : WBColors.locked.withValues(alpha: 0.12),
+            width: 1.5,
           ),
+          boxShadow: unlocked
+              ? WBShadows.card(color: accent, elevation: 0.7)
+              : [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.03),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
         ),
         child: Row(
           children: [
+            // ── Accent stripe ───────────────────────────
             Container(
-              width: 56,
-              height: 56,
+              width: 5,
               decoration: BoxDecoration(
-                color: unlocked
-                    ? zone.accentColor.withValues(alpha: 0.15)
-                    : WBColors.locked.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Center(
-                child: unlocked
-                    ? WBIcons.forZone(zone.id,
-                        color: zone.accentColor, size: 26)
-                    : WBIcons.lock(color: WBColors.locked, size: 22),
+                gradient: unlocked
+                    ? WBGradients.forZone(zone.id)
+                    : const LinearGradient(
+                        colors: [Color(0xFFD0CCEE), Color(0xFFB8B5CC)],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      ),
+                borderRadius: const BorderRadius.horizontal(
+                    left: Radius.circular(20)),
               ),
             ),
-            const SizedBox(width: 16),
+
+            // ── Content ─────────────────────────────────
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    zone.name,
-                    style: WBText.body(15,
-                        weight: FontWeight.w800,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 14),
+                child: Row(
+                  children: [
+                    // Icon bubble
+                    Container(
+                      width: 54,
+                      height: 54,
+                      decoration: BoxDecoration(
                         color: unlocked
-                            ? WBColors.textPrimary
-                            : WBColors.locked),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    unlocked ? zone.tagline : 'Earn 10 bricks to unlock',
-                    style: WBText.body(12,
-                        color: unlocked ? zone.accentColor : WBColors.locked,
-                        weight: FontWeight.w600),
-                  ),
-                  if (unlocked && bricksEarned > 0) ...[
-                    const SizedBox(height: 5),
-                    Row(
-                      children: [
-                        WBIcons.brick(
-                            color: WBColors.brickOrange, size: 12),
-                        const SizedBox(width: 4),
-                        Text(
-                          '$bricksEarned earned here',
-                          style: WBText.body(11,
-                              color: WBColors.brickOrange,
-                              weight: FontWeight.w700),
-                        ),
-                      ],
+                            ? accent.withValues(alpha: 0.12)
+                            : WBColors.locked.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: unlocked
+                            ? [
+                                BoxShadow(
+                                  color: accent.withValues(alpha: 0.15),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 3),
+                                ),
+                              ]
+                            : [],
+                      ),
+                      child: Center(
+                        child: unlocked
+                            ? WBIcons.forZone(zone.id, color: accent, size: 26)
+                            : WBIcons.lock(color: WBColors.locked, size: 22),
+                      ),
                     ),
+                    const SizedBox(width: 14),
+
+                    // Text
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            zone.name,
+                            style: WBText.body(15,
+                                weight: FontWeight.w800,
+                                color: unlocked
+                                    ? WBColors.textPrimary
+                                    : WBColors.locked),
+                          ),
+                          const SizedBox(height: 3),
+                          Text(
+                            unlocked
+                                ? zone.tagline
+                                : 'Earn 10 bricks to unlock',
+                            style: WBText.body(12,
+                                color: unlocked ? accent : WBColors.locked,
+                                weight: FontWeight.w600),
+                          ),
+                          if (unlocked && bricksEarned > 0) ...[
+                            const SizedBox(height: 6),
+                            _BrickChip(bricks: bricksEarned),
+                          ],
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+
+                    // Arrow / lock
+                    if (unlocked)
+                      Container(
+                        width: 36,
+                        height: 36,
+                        decoration: BoxDecoration(
+                          gradient: WBGradients.forZone(zone.id),
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: WBShadows.pill(accent),
+                        ),
+                        child: Center(
+                          child: WBIcons.arrowRight(
+                              color: Colors.white, size: 18),
+                        ),
+                      )
+                    else
+                      WBIcons.lock(color: WBColors.locked, size: 20),
                   ],
-                ],
+                ),
               ),
             ),
-            const SizedBox(width: 8),
-            if (unlocked)
-              Container(
-                width: 36,
-                height: 36,
-                decoration: BoxDecoration(
-                  color: zone.accentColor,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Center(
-                  child:
-                      WBIcons.arrowRight(color: Colors.white, size: 18),
-                ),
-              )
-            else
-              WBIcons.lock(color: WBColors.locked, size: 20),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _BrickChip extends StatelessWidget {
+  final int bricks;
+  const _BrickChip({required this.bricks});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: WBColors.brickOrangeLight,
+        borderRadius: BorderRadius.circular(20),
+        border:
+            Border.all(color: WBColors.brickOrange.withValues(alpha: 0.25)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          WBIcons.brick(color: WBColors.brickOrange, size: 11),
+          const SizedBox(width: 4),
+          Text(
+            '$bricks earned here',
+            style: WBText.body(10,
+                color: WBColors.brickOrange,
+                weight: FontWeight.w700),
+          ),
+        ],
       ),
     );
   }

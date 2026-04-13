@@ -231,7 +231,7 @@ class _StatsRow extends StatelessWidget {
               child: _StatCard(
                 icon: WBIcons.target(color: Colors.white, size: 20),
                 value: '${bingoState.completedCount}',
-                label: 'Bingo',
+                label: 'Challenge',
                 color: WBColors.sciGreen,
               ),
             ),
@@ -418,8 +418,8 @@ class _AchievementsGrid extends StatelessWidget {
       _Achievement(emoji: '🌟', label: 'All Zones',
           desc: 'Unlock all 4 zones',
           unlocked: ZoneInfo.all.every((z) => appState.isUnlocked(z.id))),
-      _Achievement(emoji: '🎯', label: 'Bingo!',
-          desc: 'Complete a bingo line', unlocked: bingoState.hasBingo),
+      _Achievement(emoji: '🎯', label: 'Challenge!',
+          desc: 'Complete a challenge line', unlocked: bingoState.hasBingo),
       _Achievement(emoji: '🏆', label: 'Master Builder',
           desc: 'Earn 50 bricks', unlocked: appState.bricks >= 50),
     ];
@@ -544,7 +544,7 @@ class _ResetButton extends StatelessWidget {
         title: Text('Reset everything?',
             style: WBTextStyles.titleLarge),
         content: Text(
-            'This will clear all bricks, unlocked zones, and bingo progress. Are you sure?',
+            'This will clear all bricks, unlocked zones, and challenge progress. Are you sure?',
             style: WBTextStyles.body),
         actions: [
           TextButton(

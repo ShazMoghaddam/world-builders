@@ -92,7 +92,7 @@ class TownScreen extends StatelessWidget {
                     }),
                 ),
 
-                // Daily bingo banner
+                // Daily challenge banner
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(16, 0, 16, 32),
@@ -196,7 +196,7 @@ class _DailyChallengeBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     final remaining = 25 - completedCount;
     final subtitle = hasBingo
-        ? 'You got Bingo today!'
+        ? 'Challenge complete today! 🎉'
         : '$remaining cell${remaining == 1 ? '' : 's'} left today';
 
     return WBPressable(
@@ -240,7 +240,7 @@ class _DailyChallengeBanner extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Daily Bingo',
+                  Text('Daily Challenge',
                       style: WBText.body(16,
                           color: Colors.white, weight: FontWeight.w800)),
                   const SizedBox(height: 2),

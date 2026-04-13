@@ -146,7 +146,7 @@ class _BingoHeader extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Daily Bingo', style: WBTextStyles.displayLarge),
+                  Text('Daily Challenge', style: WBTextStyles.displayLarge),
                   const SizedBox(height: 4),
                   Text('Answer questions in Play to fill your board!',
                       style: WBTextStyles.body),
@@ -187,7 +187,7 @@ class _BingoHeader extends StatelessWidget {
             ),
             const SizedBox(width: 8),
             _StatPill(
-              label: hasBingo ? 'Bingo achieved! 🎉' : 'Resets tomorrow',
+              label: hasBingo ? 'Challenge complete! 🎉' : 'Resets tomorrow',
               color: hasBingo ? WBColors.mathAmber : WBColors.lifePurple,
               icon: hasBingo ? Icons.star_rounded : Icons.today_rounded,
             ),
@@ -241,18 +241,27 @@ class _BingoGrid extends StatelessWidget {
         final gridHeight = cellSize * 5 + 4 * 5;
         return Column(
           children: [
-            // B I N G O header
+            // Column headers — 5 subject icons
             Padding(
               padding: const EdgeInsets.only(bottom: 8),
               child: Row(
-                children: ['B', 'I', 'N', 'G', 'O'].map((letter) {
+                children: ['1', '2', '3', '4', '5'].map((col) {
                   return Expanded(
                     child: Center(
-                      child: Text(
-                        letter,
-                        style: WBText.body(20,
-                            color: WBColors.lifePurple,
-                            weight: FontWeight.w900),
+                      child: Container(
+                        width: 28,
+                        height: 28,
+                        decoration: BoxDecoration(
+                          color: WBColors.lifePurple.withValues(alpha: 0.12),
+                          shape: BoxShape.circle,
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          col,
+                          style: WBText.body(13,
+                              color: WBColors.lifePurple,
+                              weight: FontWeight.w900),
+                        ),
                       ),
                     ),
                   );
@@ -381,8 +390,8 @@ class _ProgressSummary extends StatelessWidget {
           const SizedBox(height: 10),
           Text(
             bingo.hasBingo
-                ? '🎉 You got Bingo today! Come back tomorrow for a new board.'
-                : '${25 - bingo.completedCount} cells left — keep playing to get Bingo!',
+                ? '🎉 Challenge complete! Come back tomorrow for a new board.'
+                : '${25 - bingo.completedCount} cells left — keep playing to complete the challenge!',
             style: WBTextStyles.label,
           ),
         ],
